@@ -10,29 +10,30 @@ class Snake:
         self.__window = window
 
     def draw(self):
+        self.__window.fill((0, 0, 0))
         snake = pygame.Rect((self.__snakeX, self.__snakeY), (self.__snakeWidth, self.__snakeHeight))
         pygame.draw.rect(self.__window, (255, 255, 255), snake)
-        pygame.display.flip()
+        pygame.display.update()
 
     def move_left(self):
-        self.__window.fill((0, 0, 0))
         print("move left")
         self.__snakeX -= 10
+        self.draw()
 
     def move_right(self):
-        self.__window.fill((0, 0, 0))
         print("move right")
         self.__snakeX += 10
+        self.draw()
 
     def move_up(self):
-        self.__window.fill((0, 0, 0))
         print("move up")
         self.__snakeY -= 10
+        self.draw()
 
     def move_down(self):
-        self.__window.fill((0, 0, 0))
         print("move down")
         self.__snakeY += 10
+        self.draw()
 
     def eat_apple(self):
         print("eat apple")
