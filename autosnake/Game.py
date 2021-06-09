@@ -10,6 +10,7 @@ class Game:
         self.__main_window = pygame.display.set_mode((1000, 500))
         self.__snake = Snake(self.__main_window)
         self.__apple = Apple(self.__main_window)
+        self.__snake.draw()
 
     def start(self):
         running = True
@@ -31,6 +32,4 @@ class Game:
                 elif event.type == QUIT:
                     running = False
                     continue
-
-            self.__snake.draw()
             self.__apple.draw()
