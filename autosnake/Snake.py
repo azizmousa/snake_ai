@@ -16,6 +16,7 @@ class Snake:
         self.__snakeWidth = width
         self.__snakeHeight = height
         self.__window = window
+        self.__direction = Direction.RIGHT
 
     def draw(self):
         self.__window.fill((0, 0, 0))
@@ -24,23 +25,34 @@ class Snake:
         pygame.display.update()
 
     def move_left(self):
-        print("move left")
-        self.__snakeX -= 10
-        self.draw()
+        if self.__direction != Direction.RIGHT:
+            print("move left")
+            self.__direction = Direction.LEFT
 
     def move_right(self):
-        print("move right")
-        self.__snakeX += 10
-        self.draw()
+        if self.__direction != Direction.LEFT:
+            print("move right")
+            self.__direction = Direction.RIGHT
 
     def move_up(self):
-        print("move up")
-        self.__snakeY -= 10
-        self.draw()
+        if self.__direction != Direction.DOWN:
+            print("move up")
+            self.__direction = Direction.UP
 
     def move_down(self):
-        print("move down")
-        self.__snakeY += 10
+        if self.__direction != Direction.UP:
+            print("move down")
+            self.__direction = Direction.DOWN
+
+    def walk(self):
+        if self.__direction == Direction.LEFT:
+            self.__snakeX -= 10
+        elif self.__direction == Direction.RIGHT:
+            self.__snakeX += 10
+        elif self.__direction == Direction.UP:
+            self.__snakeY -= 10
+        elif self.__direction == Direction.DOWN:
+            self.__snakeY += 10
         self.draw()
 
     def eat_apple(self):
