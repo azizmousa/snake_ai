@@ -32,5 +32,5 @@ class Game:
                     running = False
                     continue
 
-            self.__snake.draw_snake()
-            self.__apple.draw_apple()
+            self.__snake.draw()
+            self.__apple.draw()

@@ -9,7 +9,7 @@ class Apple:
         self.__HEIGHT = height
         self.__window = window
 
-    def draw_apple(self):
+    def draw(self):
         apple = pygame.Rect((self.__x, self.__y), (self.__WIDTH, self.__HEIGHT))
         pygame.draw.rect(self.__window, (255, 0, 0), apple)
         pygame.display.update()

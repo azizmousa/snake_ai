@@ -9,7 +9,7 @@ class Snake:
         self.__snakeHeight = height
         self.__window = window
 
-    def draw_snake(self):
+    def draw(self):
         snake = pygame.Rect((self.__snakeX, self.__snakeY), (self.__snakeWidth, self.__snakeHeight))
         pygame.draw.rect(self.__window, (255, 255, 255), snake)
         pygame.display.flip()
