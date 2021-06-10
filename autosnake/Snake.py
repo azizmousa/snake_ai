@@ -64,4 +64,4 @@ class Snake:
 
     def eat_apple(self):
         print("eat apple")
-        self.__snakeWidth += 10
+        self.__length += 1
