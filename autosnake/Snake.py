@@ -19,6 +19,9 @@ class Snake:
         self.__window = window
         self.__direction = Direction.RIGHT
 
+    def get_coordinates(self):
+        return self.__snakeX[0], self.__snakeY[0]
+
     def draw(self):
         self.__window.fill((0, 0, 0))
         for i in range(self.__length):
@@ -65,3 +68,5 @@ class Snake:
     def eat_apple(self):
         print("eat apple")
         self.__length += 1
+        self.__snakeX.append(self.__snakeHeight)
+        self.__snakeY.append(self.__snakeHeight)
