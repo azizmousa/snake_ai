@@ -10,9 +10,10 @@ class Direction(Enum):
 
 
 class Snake:
-    def __init__(self, window, x=100, y=100, width=10, height=10):
-        self.__snakeX = x
-        self.__snakeY = y
+    def __init__(self, window, width=10, height=10, length=1):
+        self.__snakeX = [height] * length
+        self.__snakeY = [height] * length
+        self.__length = length
         self.__snakeWidth = width
         self.__snakeHeight = height
         self.__window = window
@@ -20,9 +21,11 @@ class Snake:
 
     def draw(self):
         self.__window.fill((0, 0, 0))
-        snake = pygame.Rect((self.__snakeX, self.__snakeY), (self.__snakeWidth, self.__snakeHeight))
-        pygame.draw.rect(self.__window, (255, 255, 255), snake)
-        pygame.display.update()
+        for i in range(self.__length):
+            block = pygame.Rect((self.__snakeX[i], self.__snakeY[i]),
+                                (self.__snakeWidth, self.__snakeHeight))
+            pygame.draw.rect(self.__window, (255, 255, 255), block)
+        pygame.display.flip()
 
     def move_left(self):
         if self.__direction != Direction.RIGHT:
@@ -45,14 +48,18 @@ class Snake:
             self.__direction = Direction.DOWN
 
     def walk(self):
+        for i in range(self.__length-1, 0, -1):
+            self.__snakeX[i] = self.__snakeX[i-1]
+            self.__snakeY[i] = self.__snakeY[i-1]
+
         if self.__direction == Direction.LEFT:
-            self.__snakeX -= 10
+            self.__snakeX[0] -= self.__snakeHeight
         elif self.__direction == Direction.RIGHT:
-            self.__snakeX += 10
+            self.__snakeX[0] += self.__snakeHeight
         elif self.__direction == Direction.UP:
-            self.__snakeY -= 10
+            self.__snakeY[0] -= self.__snakeHeight
         elif self.__direction == Direction.DOWN:
-            self.__snakeY += 10
+            self.__snakeY[0] += self.__snakeHeight
         self.draw()
 
     def eat_apple(self):
