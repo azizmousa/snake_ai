@@ -10,10 +10,11 @@ class Game:
     def __init__(self):
         pygame.init()
         self.__main_window = pygame.display.set_mode((1000, 500))
-        self.__snake = Snake(self.__main_window, length=1)
+        self.__snake = Snake(self.__main_window, length=16)
         self.__apple = self.create_apple()
         self.__snake.draw()
-        self.running = True
+        self.__running = True
+        self.__pause = False
 
     def play(self):
         self.__snake.walk()
@@ -23,8 +24,8 @@ class Game:
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
 
-        if self.snake_crushed():
-            self.running = False
+        if self.snake_crashed():
+            self.__pause = True
 
     @staticmethod
     def is_collision(coord1, coord2):
@@ -33,7 +34,7 @@ class Game:
                 return True
         return False
 
-    def snake_crushed(self):
+    def snake_crashed(self):
         body = self.__snake.get_body()
         for i in range(1, self.__snake.get_length()):
             if Game.is_collision(self.__snake.get_coordinates(), (body[0][i], body[1][i])):
@@ -47,11 +48,11 @@ class Game:
         pygame.display.flip()
 
     def start(self):
-        while self.running:
+        while self.__running:
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
-                        self.running = False
+                        self.__running = False
                         continue
                     elif event.key == K_LEFT:
                         self.__snake.move_left()
@@ -62,9 +63,11 @@ class Game:
                     elif event.key == K_UP:
                         self.__snake.move_up()
                 elif event.type == QUIT:
-                    self.running = False
+                    self.__running = False
                     continue
-            self.play()
+
+            if not self.__pause:
+                self.play()
             time.sleep(0.05)
 
     def create_apple(self):
