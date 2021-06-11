@@ -13,6 +13,7 @@ class Game:
         self.__snake = Snake(self.__main_window, length=1)
         self.__apple = self.create_apple()
         self.__snake.draw()
+        self.running = True
 
     def play(self):
         self.__snake.walk()
@@ -22,10 +23,20 @@ class Game:
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
 
+        if self.snake_crushed():
+            self.running = False
+
     @staticmethod
     def is_collision(coord1, coord2):
         if coord1[0] >= coord2[0] >= coord1[0]:
             if coord1[1] >= coord2[1] >= coord1[1]:
+                return True
+        return False
+
+    def snake_crushed(self):
+        body = self.__snake.get_body()
+        for i in range(1, self.__snake.get_length()):
+            if Game.is_collision(self.__snake.get_coordinates(), (body[0][i], body[1][i])):
                 return True
         return False
 
@@ -36,8 +47,7 @@ class Game:
         pygame.display.flip()
 
     def start(self):
-        running = True
-        while running:
+        while self.running:
 
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
