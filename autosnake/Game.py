@@ -48,11 +48,10 @@ class Game:
 
     def start(self):
         while self.running:
-
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     if event.key == K_ESCAPE:
-                        running = False
+                        self.running = False
                         continue
                     elif event.key == K_LEFT:
                         self.__snake.move_left()
@@ -63,7 +62,7 @@ class Game:
                     elif event.key == K_UP:
                         self.__snake.move_up()
                 elif event.type == QUIT:
-                    running = False
+                    self.running = False
                     continue
             self.play()
             time.sleep(0.05)
