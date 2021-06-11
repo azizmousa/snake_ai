@@ -10,23 +10,25 @@ class Direction(Enum):
 
 
 class Snake:
-    def __init__(self, window, width=10, height=10, length=1):
-        self.__snakeX = [height] * length
-        self.__snakeY = [height] * length
+    def __init__(self, window, size=10, length=1):
+        self.__snakeX = [size] * length
+        self.__snakeY = [size] * length
         self.__length = length
-        self.__snakeWidth = width
-        self.__snakeHeight = height
+        self.__blockSize = size
         self.__window = window
         self.__direction = Direction.RIGHT
 
     def get_coordinates(self):
         return self.__snakeX[0], self.__snakeY[0]
 
+    def get_block_size(self):
+        return self.__blockSize
+
     def draw(self):
         self.__window.fill((0, 0, 0))
         for i in range(self.__length):
             block = pygame.Rect((self.__snakeX[i], self.__snakeY[i]),
-                                (self.__snakeWidth, self.__snakeHeight))
+                                (self.__blockSize, self.__blockSize))
             pygame.draw.rect(self.__window, (255, 255, 255), block)
         pygame.display.flip()
 
@@ -56,17 +58,20 @@ class Snake:
             self.__snakeY[i] = self.__snakeY[i-1]
 
         if self.__direction == Direction.LEFT:
-            self.__snakeX[0] -= self.__snakeHeight
+            self.__snakeX[0] -= self.__blockSize
         elif self.__direction == Direction.RIGHT:
-            self.__snakeX[0] += self.__snakeHeight
+            self.__snakeX[0] += self.__blockSize
         elif self.__direction == Direction.UP:
-            self.__snakeY[0] -= self.__snakeHeight
+            self.__snakeY[0] -= self.__blockSize
         elif self.__direction == Direction.DOWN:
-            self.__snakeY[0] += self.__snakeHeight
+            self.__snakeY[0] += self.__blockSize
         self.draw()
 
     def eat_apple(self):
         print("eat apple")
         self.__length += 1
-        self.__snakeX.append(self.__snakeHeight)
-        self.__snakeY.append(self.__snakeHeight)
+        self.__snakeX.append(self.__blockSize)
+        self.__snakeY.append(self.__blockSize)
+
+    def get_length(self):
+        return self.__length
