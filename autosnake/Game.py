@@ -17,6 +17,7 @@ class Game:
     def play(self):
         self.__snake.walk()
         self.__apple.draw()
+        self.display_score()
         if Game.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
@@ -27,6 +28,12 @@ class Game:
             if coord1[1] >= coord2[1] >= coord1[1]:
                 return True
         return False
+
+    def display_score(self):
+        font = pygame.font.SysFont('arial', 40)
+        score = font.render(f"Score: {self.__snake.get_length() - 1}", True, (0, 255, 0))
+        self.__main_window.blit(score, (800, 10))
+        pygame.display.flip()
 
     def start(self):
         running = True
