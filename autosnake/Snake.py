@@ -16,7 +16,7 @@ class Snake:
         self.__length = length
         self.__blockSize = size
         self.__window = window
-        self.__direction = Direction.RIGHT
+        self.__direction = [Direction.RIGHT]
 
     def get_coordinates(self):
         return self.__snakeX[0], self.__snakeY[0]
@@ -33,38 +33,41 @@ class Snake:
         pygame.display.flip()
 
     def move_left(self):
-        if self.__direction != Direction.RIGHT:
+        if self.__direction[len(self.__direction)-1] != Direction.RIGHT:
             print("move left")
-            self.__direction = Direction.LEFT
+            self.__direction.append(Direction.LEFT)
 
     def move_right(self):
-        if self.__direction != Direction.LEFT:
+        if self.__direction[len(self.__direction)-1] != Direction.LEFT:
             print("move right")
-            self.__direction = Direction.RIGHT
+            self.__direction.append(Direction.RIGHT)
 
     def move_up(self):
-        if self.__direction != Direction.DOWN:
+        if self.__direction[len(self.__direction)-1] != Direction.DOWN:
             print("move up")
-            self.__direction = Direction.UP
+            self.__direction.append(Direction.UP)
 
     def move_down(self):
-        if self.__direction != Direction.UP:
+        if self.__direction[len(self.__direction)-1] != Direction.UP:
             print("move down")
-            self.__direction = Direction.DOWN
+            self.__direction.append(Direction.DOWN)
 
     def walk(self):
         for i in range(self.__length-1, 0, -1):
             self.__snakeX[i] = self.__snakeX[i-1]
             self.__snakeY[i] = self.__snakeY[i-1]
+        current_direction = self.__direction[0]
 
-        if self.__direction == Direction.LEFT:
+        if current_direction == Direction.LEFT:
             self.__snakeX[0] -= self.__blockSize
-        elif self.__direction == Direction.RIGHT:
+        elif current_direction == Direction.RIGHT:
             self.__snakeX[0] += self.__blockSize
-        elif self.__direction == Direction.UP:
+        elif current_direction == Direction.UP:
             self.__snakeY[0] -= self.__blockSize
-        elif self.__direction == Direction.DOWN:
+        elif current_direction == Direction.DOWN:
             self.__snakeY[0] += self.__blockSize
+        if len(self.__direction) > 1:
+            del self.__direction[0]
         self.draw()
 
     def eat_apple(self):
