@@ -10,7 +10,7 @@ class Game:
     def __init__(self):
         pygame.init()
         self.__main_window = pygame.display.set_mode((1000, 500))
-        self.__snake = Snake(self.__main_window, length=16)
+        self.__snake = Snake(self.__main_window, length=1)
         self.__apple = self.create_apple()
         self.__snake.draw()
         self.__running = True
@@ -20,24 +20,23 @@ class Game:
         self.__snake.walk()
         self.__apple.draw()
         self.display_score()
-        if Game.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
+        if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
 
         if self.snake_crashed():
             self.__pause = True
 
-    @staticmethod
-    def is_collision(coord1, coord2):
-        if coord1[0] >= coord2[0] >= coord1[0]:
-            if coord1[1] >= coord2[1] >= coord1[1]:
+    def is_collision(self, coord1, coord2):
+        if coord2[0] <= coord1[0] < coord2[0] + self.__snake.get_block_size():
+            if coord2[1] <= coord1[1] < coord2[1] + self.__snake.get_block_size():
                 return True
         return False
 
     def snake_crashed(self):
         body = self.__snake.get_body()
         for i in range(1, self.__snake.get_length()):
-            if Game.is_collision(self.__snake.get_coordinates(), (body[0][i], body[1][i])):
+            if self.is_collision(self.__snake.get_coordinates(), (body[0][i], body[1][i])):
                 return True
         return False
 
