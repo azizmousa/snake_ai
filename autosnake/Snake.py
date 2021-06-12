@@ -29,7 +29,7 @@ class Snake:
         for i in range(self.__length):
             block = pygame.Rect((self.__snakeX[i], self.__snakeY[i]),
                                 (self.__blockSize, self.__blockSize))
-            pygame.draw.rect(self.__window, (255, 255, 255), block)
+            pygame.draw.rect(self.__window, (255, 255, 255), block, 2)
         pygame.display.flip()
 
     def move_left(self):
