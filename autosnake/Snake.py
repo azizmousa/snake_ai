@@ -17,6 +17,7 @@ class Snake:
         self.__blockSize = size
         self.__window = window
         self.__direction = [Direction.RIGHT]
+        self.__prev_tail_pos = (self.__snakeX[-1], self.__snakeY[-1])
 
     def get_coordinates(self):
         return self.__snakeX[0], self.__snakeY[0]
@@ -68,6 +69,7 @@ class Snake:
             self.__snakeY[0] += self.__blockSize
         if len(self.__direction) > 1:
             del self.__direction[0]
+        self.__prev_tail_pos = (self.__snakeX[-1], self.__snakeY[-1])
         self.draw()
 
     def eat_apple(self):
@@ -81,3 +83,6 @@ class Snake:
 
     def get_body(self):
         return self.__snakeX, self.__snakeY
+
+    def get_previous_tail_position(self):
+        return self.__prev_tail_pos
