@@ -2,24 +2,33 @@ import pygame
 from pygame.locals import *
 from Snake import Snake
 from Apple import Apple
+from Graph import Graph
 import time
 import random
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, game_width=500, game_height=500):
         pygame.init()
-        self.__main_window = pygame.display.set_mode((1000, 500))
+        self.__main_window = pygame.display.set_mode((game_width, game_height))
         self.__snake = Snake(self.__main_window, length=1)
         self.__apple = self.create_apple()
         self.__snake.draw()
         self.__running = True
         self.__pause = False
+        self.__graph = Graph(game_width, game_height, self.__snake.get_block_size())
+        self.__graph.initiate_graph()
 
     def play(self):
         self.__snake.walk()
         self.__apple.draw()
         self.display_score()
+        # print(self.create_graph())
+        co = self.__snake.get_coordinates()
+        prev = self.__snake.get_previous_tail_position()
+        self.disconnect_node(co[0], co[1])
+        self.__graph.insert_node(prev[0]//self.__snake.get_block_size(), prev[1]//self.__snake.get_block_size())
+        print(self.__graph.get_graph_size())
         if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
@@ -67,7 +76,7 @@ class Game:
 
             if not self.__pause:
                 self.play()
-            time.sleep(0.05)
+            time.sleep(0.09)
 
     def create_apple(self):
         x = random.randint(1,
@@ -78,3 +87,6 @@ class Game:
             * self.__snake.get_block_size()
         print(x, ",", y)
         return Apple(self.__main_window, x, y)
+
+    def disconnect_node(self, x, y):
+        self.__graph.remove_node(x, y)
