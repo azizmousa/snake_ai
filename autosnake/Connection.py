@@ -11,3 +11,9 @@ class Connection:
 
     def get_connection(self):
         return self.__node, self.__weight
+
+    def __str__(self):
+        return f"-->{str(self.__node)}::*"
+
+    def __eq__(self, other):
+        return self.__node == other
