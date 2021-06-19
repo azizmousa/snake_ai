@@ -27,7 +27,7 @@ class Game:
         co = self.__snake.get_coordinates()
         prev = self.__snake.get_previous_tail_position()
         self.disconnect_node(co[0], co[1])
-        self.__graph.insert_node(prev[0]//self.__snake.get_block_size(), prev[1]//self.__snake.get_block_size())
+        self.__graph.insert_node(prev[0] // self.__snake.get_block_size(), prev[1] // self.__snake.get_block_size())
         print(self.__graph.get_graph_size())
         if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
@@ -89,4 +89,7 @@ class Game:
         return Apple(self.__main_window, x, y)
 
     def disconnect_node(self, x, y):
-        self.__graph.remove_node(x, y)
+        try:
+            self.__graph.remove_node(x, y)
+        except:
+            self.__pause = True
