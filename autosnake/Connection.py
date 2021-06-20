@@ -10,10 +10,13 @@ class Connection:
         return self.__weight
 
     def get_connection(self):
-        return self.__node, self.__weight
+        return self.__node.get_coordinates(), self.__weight
 
     def __str__(self):
-        return f"-->{str(self.__node)}::*"
+        return f"-->{str(self.__node)}"
+
+    def __repr__(self):
+        return f"Connection({str(self.__node)}, {self.__weight})"
 
     def __eq__(self, other):
         return self.__node == other
