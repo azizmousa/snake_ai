@@ -29,13 +29,9 @@ class Graph:
         right_node = Node(node.get_x() + self.__step, node.get_y())
         above_node = Node(node.get_x(), node.get_y() - self.__step)
         below_node = Node(node.get_x(), node.get_y() + self.__step)
-        # if left_node in self.__graph:
         self.__add_connection(node, left_node, 1)
-        # if right_node in self.__graph:
         self.__add_connection(node, right_node, 1)
-        # if above_node in self.__graph:
         self.__add_connection(node, above_node, 1)
-        # if below_node in self.__graph:
         self.__add_connection(node, below_node, 1)
         print(node, "inserted")
         return node
@@ -50,13 +46,9 @@ class Graph:
             right_node = Node(node.get_x() + self.__step, node.get_y())
             above_node = Node(node.get_x(), node.get_y() - self.__step)
             below_node = Node(node.get_x(), node.get_y() + self.__step)
-            # if left_node in self.__graph:
             self.__add_connection(node, left_node, 1)
-            # if right_node in self.__graph:
             self.__add_connection(node, right_node, 1)
-            # if above_node in self.__graph:
             self.__add_connection(node, above_node, 1)
-            # if below_node in self.__graph:
             self.__add_connection(node, below_node, 1)
 
     def remove_node(self, x, y):
@@ -68,23 +60,17 @@ class Graph:
         right_node = Node(x + self.__step, y)
         above_node = Node(x, y - self.__step)
         below_node = Node(x, y + self.__step)
-        # if left_node in self.__graph:
         self.__remove_connection(node, left_node)
-        # if right_node in self.__graph:
         self.__remove_connection(node, right_node)
-        # if above_node in self.__graph:
         self.__remove_connection(node, above_node)
-        # if below_node in self.__graph:
         self.__remove_connection(node, below_node)
         if node in self.__graph:
             del self.__graph[node]
 
     def __add_connection(self, node1, node2, weight):
         connection1 = Connection(node2, weight)
-        connection2 = Connection(node1, weight)
         if node1 in self.__graph and node2 in self.__graph:
             self.__graph[node1].append(connection1)
-            self.__graph[node2].append(connection2)
 
     def __remove_connection(self, node1, node2):
         if node2 in self.__graph:
