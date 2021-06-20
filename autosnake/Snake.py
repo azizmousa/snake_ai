@@ -30,8 +30,8 @@ class Snake:
         for i in range(self.__length):
             block = pygame.Rect((self.__snakeX[i], self.__snakeY[i]),
                                 (self.__blockSize, self.__blockSize))
-            pygame.draw.rect(self.__window, (255, 255, 255), block, 2)
-        pygame.display.flip()
+            pygame.draw.rect(self.__window, (0, 255, 0), block, 2)
+        # pygame.display.flip()
 
     def move_left(self):
         if self.__direction[len(self.__direction)-1] != Direction.RIGHT:

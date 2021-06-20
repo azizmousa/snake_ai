@@ -51,9 +51,8 @@ class Game:
 
     def display_score(self):
         font = pygame.font.SysFont('arial', 40)
-        score = font.render(f"Score: {self.__snake.get_length() - 1}", True, (0, 255, 0))
-        self.__main_window.blit(score, (800, 10))
-        pygame.display.flip()
+        score = font.render(f"Score: {self.__snake.get_length() - 1}", True, (255, 255, 255))
+        self.__main_window.blit(score, score.get_rect())
 
     def start(self):
         while self.__running:
@@ -76,7 +75,8 @@ class Game:
 
             if not self.__pause:
                 self.play()
-            time.sleep(0.09)
+            time.sleep(0.05)
+            pygame.display.update()
 
     def create_apple(self):
         x = random.randint(1,

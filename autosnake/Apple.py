@@ -15,6 +15,6 @@ class Apple:
     def draw(self):
         apple = pygame.Rect((self.__x, self.__y), (self.__WIDTH, self.__HEIGHT))
         pygame.draw.rect(self.__window, (255, 0, 0), apple)
-        pygame.display.update()
+        # pygame.display.update()
 
 
