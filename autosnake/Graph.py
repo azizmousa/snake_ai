@@ -70,7 +70,7 @@ class Graph:
     def __add_connection(self, node1, node2, weight):
         connection1 = Connection(node2, weight)
         if node1 in self.__graph and node2 in self.__graph:
-            self.__graph[node1].append(connection1)
+            self.__graph[node1].append(connection1.get_connection())
 
     def __remove_connection(self, node1, node2):
         if node2 in self.__graph:
