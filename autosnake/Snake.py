@@ -3,6 +3,7 @@ from enum import Enum
 
 
 class Direction(Enum):
+    NONE = -1
     UP = 0
     DOWN = 1
     LEFT = 2
@@ -16,7 +17,7 @@ class Snake:
         self.__length = length
         self.__blockSize = size
         self.__window = window
-        self.__direction = [Direction.RIGHT]
+        self.__direction = [Direction.NONE]
         self.__prev_tail_pos = (self.__snakeX[-1], self.__snakeY[-1])
 
     def get_coordinates(self):
@@ -57,6 +58,7 @@ class Snake:
         for i in range(self.__length-1, 0, -1):
             self.__snakeX[i] = self.__snakeX[i-1]
             self.__snakeY[i] = self.__snakeY[i-1]
+
         current_direction = self.__direction[0]
 
         if current_direction == Direction.LEFT:
