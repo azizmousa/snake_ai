@@ -16,7 +16,7 @@ class Connection:
         return f"-->{str(self.__node)}"
 
     def __repr__(self):
-        return f"Connection({str(self.__node)}, {self.__weight})"
+        return f"({str(self.__node)}, {self.__weight})"
 
     def __eq__(self, other):
-        return self.__node == other
+        return self.__node == other.__node and self.__weight == other.__weight
