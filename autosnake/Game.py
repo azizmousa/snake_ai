@@ -11,7 +11,7 @@ class Game:
     def __init__(self, game_width=500, game_height=500):
         pygame.init()
         self.__main_window = pygame.display.set_mode((game_width, game_height))
-        self.__snake = Snake(self.__main_window, length=1)
+        self.__snake = Snake(self.__main_window, length=1, size=10)
         self.__apple = self.create_apple()
         self.__snake.draw()
         self.__running = True
@@ -21,20 +21,20 @@ class Game:
 
     def play(self):
         self.__snake.walk()
-        self.__apple.draw()
-        self.display_score()
-        # print(self.create_graph())
-        co = self.__snake.get_coordinates()
-        prev = self.__snake.get_previous_tail_position()
-        self.disconnect_node(co[0], co[1])
-        self.__graph.insert_node(prev[0] // self.__snake.get_block_size(), prev[1] // self.__snake.get_block_size())
-        print(self.__graph.get_graph_size())
-        if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
-            self.__snake.eat_apple()
-            self.__apple = self.create_apple()
 
         if self.snake_crashed():
             self.__pause = True
+        # print(self.__graph.get_graph())
+
+        self.__apple.draw()
+        self.display_score()
+        co = self.__snake.get_coordinates()
+        prev = self.__snake.get_previous_tail_position()
+        self.disconnect_node(co[0], co[1])
+        self.__graph.insert_node(prev[0], prev[1])
+        if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
+            self.__snake.eat_apple()
+            self.__apple = self.create_apple()
 
     def is_collision(self, coord1, coord2):
         if coord2[0] <= coord1[0] < coord2[0] + self.__snake.get_block_size():
@@ -43,6 +43,12 @@ class Game:
         return False
 
     def snake_crashed(self):
+        coord1 = self.__snake.get_coordinates()
+        if coord1[0] >= self.__main_window.get_width() \
+                or coord1[1] >= self.__main_window.get_height():
+            return True
+        if coord1[0] < 0 or coord1[1] < 0:
+            return True
         body = self.__snake.get_body()
         for i in range(1, self.__snake.get_length()):
             if self.is_collision(self.__snake.get_coordinates(), (body[0][i], body[1][i])):
@@ -72,7 +78,6 @@ class Game:
                 elif event.type == QUIT:
                     self.__running = False
                     continue
-
             if not self.__pause:
                 self.play()
             time.sleep(0.05)
@@ -89,7 +94,4 @@ class Game:
         return Apple(self.__main_window, x, y)
 
     def disconnect_node(self, x, y):
-        try:
-            self.__graph.remove_node(x, y)
-        except:
-            self.__pause = True
+        self.__graph.remove_node(x, y)
