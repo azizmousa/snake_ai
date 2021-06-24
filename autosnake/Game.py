@@ -18,6 +18,7 @@ class Game:
         self.__pause = False
         self.__graph = Graph(game_width, game_height, self.__snake.get_block_size())
         self.__graph.initiate_graph()
+        print("Apple At:", self.__apple.get_coordinates())
 
     def play(self):
         self.__snake.walk()
@@ -35,23 +36,26 @@ class Game:
         if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
+            print("Apple At:", self.__apple.get_coordinates())
 
-    def is_collision(self, coord1, coord2):
-        if coord2[0] <= coord1[0] < coord2[0] + self.__snake.get_block_size():
-            if coord2[1] <= coord1[1] < coord2[1] + self.__snake.get_block_size():
+    @staticmethod
+    def is_collision(coord1, coord2):
+        if coord2[0] == coord1[0]:
+            if coord2[1] == coord1[1]:
                 return True
         return False
 
     def snake_crashed(self):
         coord1 = self.__snake.get_coordinates()
-        if coord1[0] >= self.__main_window.get_width() \
-                or coord1[1] >= self.__main_window.get_height():
+        if coord1[0] >= self.__main_window.get_width()//self.__snake.get_block_size() \
+                or coord1[1] >= self.__main_window.get_height()//self.__snake.get_block_size():
             return True
         if coord1[0] < 0 or coord1[1] < 0:
             return True
         body = self.__snake.get_body()
-        for i in range(1, self.__snake.get_length()):
-            if self.is_collision(self.__snake.get_coordinates(), (body[0][i], body[1][i])):
+        for i in range(3, self.__snake.get_length()):
+            if self.is_collision(self.__snake.get_coordinates(), (body[0][i]//self.__snake.get_block_size(),
+                                                                  body[1][i]//self.__snake.get_block_size())):
                 return True
         return False
 
@@ -85,13 +89,13 @@ class Game:
 
     def create_apple(self):
         x = random.randint(1,
-                           (self.__main_window.get_width()) // self.__snake.get_block_size() - 1) \
-            * self.__snake.get_block_size()
+                           (self.__main_window.get_width()) // self.__snake.get_block_size() - 1)
+
         y = random.randint(1,
-                           (self.__main_window.get_height()) // self.__snake.get_block_size() - 1) \
-            * self.__snake.get_block_size()
-        print(x, ",", y)
-        return Apple(self.__main_window, x, y)
+                           (self.__main_window.get_height()) // self.__snake.get_block_size() - 1)
+
+        # print("Apple x,y:", x, ",", y)
+        return Apple(self.__main_window, x, y, scale=self.__snake.get_block_size())
 
     def disconnect_node(self, x, y):
         self.__graph.remove_node(x, y)
