@@ -11,8 +11,8 @@ class Direction(Enum):
 
 class Snake:
     def __init__(self, window, size=10, length=1):
-        self.__snakeX = [size] * length
-        self.__snakeY = [size] * length
+        self.__snakeX = [0] * length
+        self.__snakeY = [0] * length
         self.__length = length
         self.__blockSize = size
         self.__window = window
@@ -20,7 +20,7 @@ class Snake:
         self.__prev_tail_pos = (self.__snakeX[-1], self.__snakeY[-1])
 
     def get_coordinates(self):
-        return self.__snakeX[0], self.__snakeY[0]
+        return self.__snakeX[0]//self.__blockSize, self.__snakeY[0]//self.__blockSize
 
     def get_block_size(self):
         return self.__blockSize
@@ -30,7 +30,7 @@ class Snake:
         for i in range(self.__length):
             block = pygame.Rect((self.__snakeX[i], self.__snakeY[i]),
                                 (self.__blockSize, self.__blockSize))
-            pygame.draw.rect(self.__window, (0, 255, 0), block, 2)
+            pygame.draw.rect(self.__window, (0, 255, 0), block, 1)
         # pygame.display.flip()
 
     def move_left(self):
@@ -69,14 +69,15 @@ class Snake:
             self.__snakeY[0] += self.__blockSize
         if len(self.__direction) > 1:
             del self.__direction[0]
-        self.__prev_tail_pos = (self.__snakeX[-1], self.__snakeY[-1])
+        self.__prev_tail_pos = (self.__snakeX[-1] // self.__blockSize, self.__snakeY[-1]//self.__blockSize)
         self.draw()
+        # print(self.get_coordinates())
 
     def eat_apple(self):
         print("eat apple")
         self.__length += 1
-        self.__snakeX.append(self.__blockSize)
-        self.__snakeY.append(self.__blockSize)
+        self.__snakeX.append(1)
+        self.__snakeY.append(1)
 
     def get_length(self):
         return self.__length
