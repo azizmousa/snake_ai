@@ -1,10 +1,13 @@
 import pygame
 from pygame.locals import *
 from Snake import Snake
+from Snake import Direction
 from Apple import Apple
 from Graph import Graph
 import time
 import random
+from BFS import Bfs
+from Node import Node
 
 
 class Game:
@@ -17,7 +20,13 @@ class Game:
         self.__running = True
         self.__pause = False
         self.__graph = Graph(game_width, game_height, self.__snake.get_block_size())
+        print("GAME SIZE:", self.__main_window.get_width()//self.__snake.get_block_size(),
+              self.__main_window.get_height()//self.__snake.get_block_size())
         self.__graph.initiate_graph()
+        self._bfs = Bfs(self.__graph, Node(self.__snake.get_coordinates()[0],
+                                           self.__snake.get_coordinates()[1]),
+                        Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
+        self._bfs.get_next_direction()
         print("Apple At:", self.__apple.get_coordinates())
 
     def play(self):
@@ -36,6 +45,9 @@ class Game:
         if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
+            self._bfs.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
+                                                      self.__snake.get_coordinates()[1]),
+                                   Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
             print("Apple At:", self.__apple.get_coordinates())
 
     @staticmethod
@@ -47,15 +59,15 @@ class Game:
 
     def snake_crashed(self):
         coord1 = self.__snake.get_coordinates()
-        if coord1[0] >= self.__main_window.get_width()//self.__snake.get_block_size() \
-                or coord1[1] >= self.__main_window.get_height()//self.__snake.get_block_size():
+        if coord1[0] >= self.__main_window.get_width() // self.__snake.get_block_size() \
+                or coord1[1] >= self.__main_window.get_height() // self.__snake.get_block_size():
             return True
         if coord1[0] < 0 or coord1[1] < 0:
             return True
         body = self.__snake.get_body()
         for i in range(3, self.__snake.get_length()):
-            if self.is_collision(self.__snake.get_coordinates(), (body[0][i]//self.__snake.get_block_size(),
-                                                                  body[1][i]//self.__snake.get_block_size())):
+            if self.is_collision(self.__snake.get_coordinates(), (body[0][i] // self.__snake.get_block_size(),
+                                                                  body[1][i] // self.__snake.get_block_size())):
                 return True
         return False
 
@@ -71,20 +83,23 @@ class Game:
                     if event.key == K_ESCAPE:
                         self.__running = False
                         continue
-                    elif event.key == K_LEFT:
-                        self.__snake.move_left()
-                    elif event.key == K_RIGHT:
-                        self.__snake.move_right()
-                    elif event.key == K_DOWN:
-                        self.__snake.move_down()
-                    elif event.key == K_UP:
-                        self.__snake.move_up()
                 elif event.type == QUIT:
                     self.__running = False
                     continue
+
             if not self.__pause:
+                n_dir = self._bfs.get_next_direction()
+                print("DIRECTION:", n_dir)
+                if n_dir == Direction.LEFT:
+                    self.__snake.move_left()
+                elif n_dir == Direction.RIGHT:
+                    self.__snake.move_right()
+                elif n_dir == Direction.DOWN:
+                    self.__snake.move_down()
+                elif n_dir == Direction.UP:
+                    self.__snake.move_up()
                 self.play()
-            time.sleep(0.05)
+            time.sleep(0.09)
             pygame.display.update()
 
     def create_apple(self):
@@ -93,7 +108,8 @@ class Game:
 
         y = random.randint(1,
                            (self.__main_window.get_height()) // self.__snake.get_block_size() - 1)
-
+        # x = 18
+        # y = 6
         # print("Apple x,y:", x, ",", y)
         return Apple(self.__main_window, x, y, scale=self.__snake.get_block_size())
 
