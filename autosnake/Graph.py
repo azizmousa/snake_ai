@@ -14,81 +14,67 @@ class Graph:
         self.__cols = cols // step
         self.__step = step
 
-    def create_node(self, node_x, node_y):
+    def __create_node(self, node_x, node_y):
         node = Node(node_x, node_y)
         if node not in self.__graph:
             self.__graph[node] = []
-        print(node, "added")
         return node
 
-    def insert_node(self, node_x, node_y):
+    def insert_node(self, node_x, node_y, initiate=False):
+        if not initiate:
+            node_x = node_x // self.__step
+        if not initiate:
+            node_y = node_y // self.__step
         node = Node(node_x, node_y)
         if node not in self.__graph:
             self.__graph[node] = []
-        left_node = Node(node.get_x() - self.__step, node.get_y())
-        right_node = Node(node.get_x() + self.__step, node.get_y())
-        above_node = Node(node.get_x(), node.get_y() - self.__step)
-        below_node = Node(node.get_x(), node.get_y() + self.__step)
-        # if left_node in self.__graph:
+        left_node = Node(node.get_x() - 1, node.get_y())
+        right_node = Node(node.get_x() + 1, node.get_y())
+        above_node = Node(node.get_x(), node.get_y() - 1)
+        below_node = Node(node.get_x(), node.get_y() + 1)
         self.__add_connection(node, left_node, 1)
-        # if right_node in self.__graph:
         self.__add_connection(node, right_node, 1)
-        # if above_node in self.__graph:
         self.__add_connection(node, above_node, 1)
-        # if below_node in self.__graph:
         self.__add_connection(node, below_node, 1)
-        print(node, "inserted")
+        self.__add_connection(left_node, node, 1)
+        self.__add_connection(right_node, node, 1)
+        self.__add_connection(above_node, node, 1)
+        self.__add_connection(below_node, node, 1)
         return node
 
     def initiate_graph(self):
         for y in range(self.__rows):
             for x in range(self.__cols):
-                self.create_node(x, y)
+                self.__create_node(x, y)
 
         for node in self.__graph:
-            left_node = Node(node.get_x() - self.__step, node.get_y())
-            right_node = Node(node.get_x() + self.__step, node.get_y())
-            above_node = Node(node.get_x(), node.get_y() - self.__step)
-            below_node = Node(node.get_x(), node.get_y() + self.__step)
-            # if left_node in self.__graph:
-            self.__add_connection(node, left_node, 1)
-            # if right_node in self.__graph:
-            self.__add_connection(node, right_node, 1)
-            # if above_node in self.__graph:
-            self.__add_connection(node, above_node, 1)
-            # if below_node in self.__graph:
-            self.__add_connection(node, below_node, 1)
+            self.insert_node(node.get_x(), node.get_y(), True)
 
     def remove_node(self, x, y):
         x = x//self.__step
         y = y//self.__step
         node = Node(x, y)
-        print(node, "removed")
-        left_node = Node(x - self.__step, y)
-        right_node = Node(x + self.__step, y)
-        above_node = Node(x, y - self.__step)
-        below_node = Node(x, y + self.__step)
-        # if left_node in self.__graph:
-        self.__remove_connection(node, left_node)
-        # if right_node in self.__graph:
-        self.__remove_connection(node, right_node)
-        # if above_node in self.__graph:
-        self.__remove_connection(node, above_node)
-        # if below_node in self.__graph:
-        self.__remove_connection(node, below_node)
         if node in self.__graph:
+            left_node = Node(x - 1, y)
+            right_node = Node(x + 1, y)
+            above_node = Node(x, y - 1)
+            below_node = Node(x, y + 1)
+            self.__remove_connection(node, left_node, 1)
+            self.__remove_connection(node, right_node, 1)
+            self.__remove_connection(node, above_node, 1)
+            self.__remove_connection(node, below_node, 1)
             del self.__graph[node]
 
-    def __add_connection(self, node1, node2, weight):
-        connection1 = Connection(node2, weight)
-        connection2 = Connection(node1, weight)
-        if node1 in self.__graph and node2 in self.__graph:
-            self.__graph[node1].append(connection1)
-            self.__graph[node2].append(connection2)
+    def __add_connection(self, node, target, weight):
+        if node in self.__graph and target in self.__graph:
+            connection1 = Connection(target, weight)
+            if connection1 not in self.__graph[node]:
+                self.__graph[node].append(connection1)
 
-    def __remove_connection(self, node1, node2):
+    def __remove_connection(self, node1, node2, weight):
         if node2 in self.__graph:
-            self.__graph[node2].remove(node1)
+            connection = Connection(node1, weight)
+            self.__graph[node2].remove(connection)
 
     def get_graph(self):
         return self.__graph
