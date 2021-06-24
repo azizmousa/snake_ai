@@ -19,7 +19,7 @@ class Node:
         return f"({self.__x}, {self.__y})"
 
     def __repr__(self):
-        return f"Node({self.__x}, {self.__y})"
+        return f"({self.__x}, {self.__y})"
 
     def __hash__(self):
         return hash((self.__x, self.__y))
