@@ -1,6 +1,6 @@
 from Node import Node
 from Connection import Connection
-
+from Snake import Direction
 """
 graph = {node1: [(node2, weight1), (node3, weight2), (node4, weight3)]}
 graph = {node1: [connection1, connection2, connection3]}
@@ -20,11 +20,7 @@ class Graph:
             self.__graph[node] = []
         return node
 
-    def insert_node(self, node_x, node_y, initiate=False):
-        if not initiate:
-            node_x = node_x // self.__step
-        if not initiate:
-            node_y = node_y // self.__step
+    def insert_node(self, node_x, node_y):
         node = Node(node_x, node_y)
         if node not in self.__graph:
             self.__graph[node] = []
@@ -49,11 +45,9 @@ class Graph:
                 self.__create_node(x, y)
 
         for node in self.__graph:
-            self.insert_node(node.get_x(), node.get_y(), True)
+            self.insert_node(node.get_x(), node.get_y())
 
     def remove_node(self, x, y):
-        x = x//self.__step
-        y = y//self.__step
         node = Node(x, y)
         if node in self.__graph:
             left_node = Node(x - 1, y)
