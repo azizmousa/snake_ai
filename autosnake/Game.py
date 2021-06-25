@@ -15,7 +15,6 @@ class Game:
         pygame.init()
         self.__main_window = pygame.display.set_mode((game_width, game_height))
         self.__snake = Snake(self.__main_window, length=1, size=10)
-        self.__apple = self.create_apple()
         self.__snake.draw()
         self.__running = True
         self.__pause = False
@@ -23,10 +22,10 @@ class Game:
         print("GAME SIZE:", self.__main_window.get_width()//self.__snake.get_block_size(),
               self.__main_window.get_height()//self.__snake.get_block_size())
         self.__graph.initiate_graph()
+        self.__apple = self.create_apple()
         self._bfs = Bfs(self.__graph, Node(self.__snake.get_coordinates()[0],
                                            self.__snake.get_coordinates()[1]),
                         Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
-        self._bfs.get_next_direction()
         print("Apple At:", self.__apple.get_coordinates())
 
     def play(self):
@@ -34,21 +33,25 @@ class Game:
 
         if self.snake_crashed():
             self.__pause = True
-        # print(self.__graph.get_graph())
 
         self.__apple.draw()
         self.display_score()
-        co = self.__snake.get_coordinates()
+        if self.__snake.get_length() > 1:
+            co = self.__snake.get_second_block()
+            self.disconnect_node(co[0], co[1])
         prev = self.__snake.get_previous_tail_position()
-        self.disconnect_node(co[0], co[1])
-        self.__graph.insert_node(prev[0], prev[1])
         if self.is_collision(self.__snake.get_coordinates(), self.__apple.get_coordinates()):
             self.__snake.eat_apple()
             self.__apple = self.create_apple()
-            self._bfs.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
-                                                      self.__snake.get_coordinates()[1]),
-                                   Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
-            print("Apple At:", self.__apple.get_coordinates())
+            # print("Apple At:", self.__apple.get_coordinates())
+
+        # print(self.__graph.get_graph())
+        self._bfs.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
+                                                  self.__snake.get_coordinates()[1]),
+                               Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
+
+        self.__graph.insert_node(prev[0], prev[1])
+        # print("snake Pos:", self.__snake.get_coordinates())
 
     @staticmethod
     def is_collision(coord1, coord2):
@@ -89,7 +92,7 @@ class Game:
 
             if not self.__pause:
                 n_dir = self._bfs.get_next_direction()
-                print("DIRECTION:", n_dir)
+                # print("DIRECTION:", n_dir)
                 if n_dir == Direction.LEFT:
                     self.__snake.move_left()
                 elif n_dir == Direction.RIGHT:
@@ -99,19 +102,14 @@ class Game:
                 elif n_dir == Direction.UP:
                     self.__snake.move_up()
                 self.play()
-            time.sleep(0.09)
+            # time.sleep(0.04)
             pygame.display.update()
 
     def create_apple(self):
-        x = random.randint(1,
-                           (self.__main_window.get_width()) // self.__snake.get_block_size() - 1)
-
-        y = random.randint(1,
-                           (self.__main_window.get_height()) // self.__snake.get_block_size() - 1)
-        # x = 18
-        # y = 6
+        g_list = list(self.__graph.get_graph().keys())
+        node = random.randint(0, len(g_list)-1)
         # print("Apple x,y:", x, ",", y)
-        return Apple(self.__main_window, x, y, scale=self.__snake.get_block_size())
+        return Apple(self.__main_window, g_list[node].get_x(), g_list[node].get_y(), scale=self.__snake.get_block_size())
 
     def disconnect_node(self, x, y):
         self.__graph.remove_node(x, y)
