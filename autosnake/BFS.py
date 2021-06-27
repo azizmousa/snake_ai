@@ -21,14 +21,14 @@ class Bfs(Walker):
             self._current_direction = dr
             return dr
         else:
-            if self._current_direction == Direction.LEFT:
-                return Direction.RIGHT
-            elif self._current_direction == Direction.RIGHT:
-                return Direction.LEFT
-            elif self._current_direction == Direction.UP:
-                return Direction.DOWN
-            elif self._current_direction == Direction.DOWN:
-                return Direction.UP
+            # if self._current_direction == Direction.LEFT:
+            #     return Direction.RIGHT
+            # elif self._current_direction == Direction.RIGHT:
+            #     return Direction.LEFT
+            # elif self._current_direction == Direction.UP:
+            #     return Direction.DOWN
+            # elif self._current_direction == Direction.DOWN:
+            return Direction.NONE
 
     @staticmethod
     def _get_direction(current, new_node):
