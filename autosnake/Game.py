@@ -92,6 +92,14 @@ class Game:
 
             if not self.__pause:
                 n_dir = self._bfs.get_next_direction()
+                print(n_dir)
+                if n_dir == Direction.NONE:
+                    self._bfs.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
+                                                              self.__snake.get_coordinates()[1]),
+                                           Node(self.__snake.get_previous_tail_position()[0],
+                                                self.__snake.get_previous_tail_position()[1]))
+                    n_dir = self._bfs.get_next_direction()
+
                 # print("DIRECTION:", n_dir)
                 if n_dir == Direction.LEFT:
                     self.__snake.move_left()
