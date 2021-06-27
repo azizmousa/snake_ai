@@ -6,12 +6,12 @@ from Apple import Apple
 from Graph import Graph
 import time
 import random
-from BFS import Bfs
 from Node import Node
+from Walker import Walker
 
 
 class Game:
-    def __init__(self, game_width=500, game_height=500):
+    def __init__(self, walker: Walker, game_width=500, game_height=500):
         pygame.init()
         self.__main_window = pygame.display.set_mode((game_width, game_height))
         self.__snake = Snake(self.__main_window, length=1, size=10)
@@ -23,9 +23,10 @@ class Game:
               self.__main_window.get_height()//self.__snake.get_block_size())
         self.__graph.initiate_graph()
         self.__apple = self.create_apple()
-        self._bfs = Bfs(self.__graph, Node(self.__snake.get_coordinates()[0],
-                                           self.__snake.get_coordinates()[1]),
-                        Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
+        self._walker = walker
+        self._walker.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
+                           self.__snake.get_coordinates()[1]),
+        Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
         print("Apple At:", self.__apple.get_coordinates())
 
     def play(self):
@@ -46,7 +47,7 @@ class Game:
             # print("Apple At:", self.__apple.get_coordinates())
 
         # print(self.__graph.get_graph())
-        self._bfs.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
+        self._walker.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
                                                   self.__snake.get_coordinates()[1]),
                                Node(self.__apple.get_coordinates()[0], self.__apple.get_coordinates()[1]))
 
@@ -91,14 +92,14 @@ class Game:
                     continue
 
             if not self.__pause:
-                n_dir = self._bfs.get_next_direction()
+                n_dir = self._walker.get_next_direction()
                 print(n_dir)
                 if n_dir == Direction.NONE:
-                    self._bfs.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
+                    self._walker.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
                                                               self.__snake.get_coordinates()[1]),
                                            Node(self.__snake.get_previous_tail_position()[0],
                                                 self.__snake.get_previous_tail_position()[1]))
-                    n_dir = self._bfs.get_next_direction()
+                    n_dir = self._walker.get_next_direction()
 
                 # print("DIRECTION:", n_dir)
                 if n_dir == Direction.LEFT:
