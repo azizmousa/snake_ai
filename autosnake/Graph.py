@@ -13,11 +13,15 @@ class Graph:
         self.__rows = rows // step
         self.__cols = cols // step
         self.__step = step
+        self.__border_nodes = []
 
     def __create_node(self, node_x, node_y):
         node = Node(node_x, node_y)
         if node not in self.__graph:
             self.__graph[node] = []
+        if (node_x == 0 or node_y == 0 or node_x == self.__cols - 1 or node_y == self.__rows - 1) \
+                and node not in self.__border_nodes:
+            self.__border_nodes.append(node)
         return node
 
     def insert_node(self, node_x, node_y):
@@ -85,3 +89,11 @@ class Graph:
 
     def __str__(self):
         return str(self.__graph)
+
+    def disconnect_borders(self):
+        for node in self.__border_nodes:
+            self.remove_node(node.get_x(), node.get_y())
+
+    def connect_borders(self):
+        for node in self.__border_nodes:
+            self.insert_node(node.get_x(), node.get_y())
