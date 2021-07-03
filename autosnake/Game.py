@@ -97,8 +97,8 @@ class Game:
                 if n_dir == Direction.NONE:
                     self._walker.update_graph(self.__graph, Node(self.__snake.get_coordinates()[0],
                                                               self.__snake.get_coordinates()[1]),
-                                           Node(self.__snake.get_previous_tail_position()[0],
-                                                self.__snake.get_previous_tail_position()[1]))
+                                           Node(self.__apple.get_coordinates()[0],
+                                                self.__apple.get_coordinates()[1]))
                     n_dir = self._walker.get_next_direction()
 
                 # print("DIRECTION:", n_dir)
@@ -117,6 +117,8 @@ class Game:
     def create_apple(self):
         g_list = list(self.__graph.get_graph().keys())
         node = random.randint(0, len(g_list)-1)
+        snake_head = Node(self.__snake.get_coordinates()[0], self.__snake.get_coordinates()[1])
+        g_list.remove(snake_head)
         # print("Apple x,y:", x, ",", y)
         return Apple(self.__main_window, g_list[node].get_x(), g_list[node].get_y(), scale=self.__snake.get_block_size())
 
