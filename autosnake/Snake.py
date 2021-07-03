@@ -12,8 +12,8 @@ class Direction(Enum):
 
 class Snake:
     def __init__(self, window, size=10, length=1):
-        self.__snakeX = [0] * length
-        self.__snakeY = [0] * length
+        self.__snakeX = [size] * length
+        self.__snakeY = [size] * length
         self.__length = length
         self.__blockSize = size
         self.__window = window
