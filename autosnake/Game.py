@@ -115,11 +115,13 @@ class Game:
             pygame.display.update()
 
     def create_apple(self):
-        g_list = list(self.__graph.get_graph().keys())
-        node = random.randint(0, len(g_list)-1)
         snake_head = Node(self.__snake.get_coordinates()[0], self.__snake.get_coordinates()[1])
+        g_list = list(self.__graph.get_graph().keys())
         g_list.remove(snake_head)
-        # print("Apple x,y:", x, ",", y)
+        node = random.randint(0, len(g_list)-1)
+
+        # print("node number:", node, "max len", len(g_list))
+        # print("Apple x,y:", g_list[node].get_x(), ",", g_list[node].get_y())
         return Apple(self.__main_window, g_list[node].get_x(), g_list[node].get_y(), scale=self.__snake.get_block_size())
 
     def disconnect_node(self, x, y):
